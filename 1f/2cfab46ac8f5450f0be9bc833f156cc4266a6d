@@ -1,0 +1,34 @@
+.gitattributes
+  h_996c2add31e3eb 1-2
+.gitignore
+  h_996c2add31e3eb 1-39
+.idea/.gitignore
+  h_996c2add31e3eb 1-12
+.idea/encodings.xml
+  h_996c2add31e3eb 1-10
+.idea/material_theme_project_new.xml
+  h_996c2add31e3eb 1-12
+.idea/misc.xml
+  h_996c2add31e3eb 1-20
+boot01-helloworld/pom.xml
+  h_996c2add31e3eb 1-21
+boot01-helloworld/src/main/java/com/fxy/boot/MainApplication.java
+  h_996c2add31e3eb 1-25
+boot01-helloworld/src/main/java/com/fxy/boot/controller/HelloController.java
+  h_996c2add31e3eb 1-27
+boot01-helloworld/src/main/resources/application.properties
+  h_996c2add31e3eb 1
+pom.xml
+  h_996c2add31e3eb 1-45
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.2",
+  "base_commit_sha": "1f2cfab46ac8f5450f0be9bc833f156cc4266a6d",
+  "prompts": {},
+  "humans": {
+    "h_996c2add31e3eb": {
+      "author": "feixuanyu <johnny.fei@ly.com>"
+    }
+  }
+}
