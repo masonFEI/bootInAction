@@ -1,0 +1,25 @@
+笔记.md
+  h_e501752fc60351 39,51,99-129
+  s_55fab1b74dbc6b::t_852ed97ab83b71 130-131
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.2",
+  "base_commit_sha": "b294112ad7b56fcdb86eaabb33853b3d27c44d0d",
+  "prompts": {},
+  "humans": {
+    "h_e501752fc60351": {
+      "author": "masonFEI <994085848@qq.com>"
+    }
+  },
+  "sessions": {
+    "s_55fab1b74dbc6b": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1f184-8395-7080-b458-3364df89fe41",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "masonFEI <994085848@qq.com>"
+    }
+  }
+}
