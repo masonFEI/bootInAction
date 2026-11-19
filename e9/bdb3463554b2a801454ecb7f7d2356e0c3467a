@@ -1,0 +1,31 @@
+boot01-helloworld/src/main/java/com/fxy/boot/controller/HelloController.java
+  h_e501752fc60351 7,9,29-37,39
+  h_e501752fc60351 38
+笔记.md
+  h_e501752fc60351 13,132-161
+boot01-helloworld/src/main/java/com/fxy/boot/model/Response.java
+  h_e501752fc60351 1-24
+boot01-helloworld/src/main/resources/application.properties
+  s_55fab1b74dbc6b::t_4b02371764b3a3 4
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.2",
+  "base_commit_sha": "e9bdb3463554b2a801454ecb7f7d2356e0c3467a",
+  "prompts": {},
+  "humans": {
+    "h_e501752fc60351": {
+      "author": "masonFEI <994085848@qq.com>"
+    }
+  },
+  "sessions": {
+    "s_55fab1b74dbc6b": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1f184-8395-7080-b458-3364df89fe41",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "masonFEI <994085848@qq.com>"
+    }
+  }
+}
