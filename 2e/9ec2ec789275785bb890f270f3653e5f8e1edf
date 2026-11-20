@@ -1,0 +1,33 @@
+pom.xml
+  h_e501752fc60351 37,48-70
+笔记.md
+  h_e501752fc60351 162-214
+  s_55fab1b74dbc6b::t_fc6ff41b9b1af3 161
+boot01-helloworld/src/main/resources/application.yaml
+  h_e501752fc60351 1-9
+boot01-helloworld/pom.xml
+  h_e501752fc60351 15-23
+boot01-helloworld/src/test/java/com/fxy/boot/JdbcTemplateTest.java
+  h_e501752fc60351 1-45
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.2",
+  "base_commit_sha": "2e9ec2ec789275785bb890f270f3653e5f8e1edf",
+  "prompts": {},
+  "humans": {
+    "h_e501752fc60351": {
+      "author": "masonFEI <994085848@qq.com>"
+    }
+  },
+  "sessions": {
+    "s_55fab1b74dbc6b": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1f184-8395-7080-b458-3364df89fe41",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "masonFEI <994085848@qq.com>"
+    }
+  }
+}
