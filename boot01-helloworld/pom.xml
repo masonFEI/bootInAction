@@ -12,4 +12,13 @@
 
     <artifactId>boot01-helloworld</artifactId>
 
+    <dependencies>
+        <!-- 测试依赖：提供 @SpringBootTest、JUnit 5、AssertJ 等 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
 </project>
