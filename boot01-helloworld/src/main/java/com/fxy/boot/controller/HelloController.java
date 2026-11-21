@@ -5,6 +5,7 @@
 package com.fxy.boot.controller;
 
 import com.fxy.boot.model.Response;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,6 +21,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 public class HelloController {
 
+    @Value("${user.name}")
+    private String userName;
+
     @ResponseBody
     @RequestMapping("/hello")
     public String handle01() {
@@ -32,7 +36,9 @@ public class HelloController {
 
         Response response = new Response();
 
-        response.setMessage("ok");
+        response.setMessage(userName);
+
+        response.setCode(200);
 
         return response;
     }
