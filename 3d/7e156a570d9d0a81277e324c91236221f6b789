@@ -1,0 +1,14 @@
+mysql笔记.md
+  h_e501752fc60351 77
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.2",
+  "base_commit_sha": "3d7e156a570d9d0a81277e324c91236221f6b789",
+  "prompts": {},
+  "humans": {
+    "h_e501752fc60351": {
+      "author": "masonFEI <994085848@qq.com>"
+    }
+  }
+}
