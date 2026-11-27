@@ -94,14 +94,17 @@ MVCC 多版本并发控制，就可以做到读写不阻塞，且避免了类似
 
 ## 事务的使用与优化
 
-应用侧保证一致：单库/单机靠数据库事务保证 ACID；跨服务、跨库时一个本地事务覆盖不了全局，只能靠应用层设计保证最终一致（本地事务 + 消息表/MQ + 幂等消费 + 定时补偿对账），而不是硬上 XA（性能差、故障恢复复杂）
+应用侧保证一致：单库/单机靠数据库事务保证
+ACID；跨服务、跨库时一个本地事务覆盖不了全局，只能靠应用层设计保证最终一致（本地事务 + 消息表/MQ + 幂等消费 + 定时补偿对账），而不是硬上
+XA（性能差、故障恢复复杂）
 
 ### 什么时候开事务
 
 - 能一条 SQL 搞定的绝不显式开事务，autocommit=1 下单条语句本身就是隐式事务
 - 只读：只有需要"多张表读同一份快照"时才 BEGIN（RR 下多条查询共用一个 read view）
 - 写：涉及多表、多行、多语句必须开，保证原子性
-- 跨服务调用不要放进同一个本地事务：本地事务只管本地库，远程调用失败时回滚不了对方，要靠应用侧最终一致（事务消息 / TCC / Saga）
+- 跨服务调用不要放进同一个本地事务：本地事务只管本地库，远程调用失败时回滚不了对方，要靠应用侧最终一致（事务消息 / TCC /
+  Saga）
 
 ### Spring 声明式事务
 
@@ -115,7 +118,8 @@ public void transfer(String from, String to, BigDecimal amount) {
 常用参数：
 
 - rollbackFor：默认只对 RuntimeException 和 Error 回滚，受检异常不回滚，统一写 rollbackFor = Exception.class
-- propagation：REQUIRED(默认，有则加入无则新建) / REQUIRES_NEW(挂起当前事务另起一个，常用于"失败也不影响主流程"的日志) / NESTED(基于 savepoint 局部回滚) / SUPPORTS / NEVER
+- propagation：REQUIRED(默认，有则加入无则新建) / REQUIRES_NEW(挂起当前事务另起一个，常用于"失败也不影响主流程"的日志) /
+  NESTED(基于 savepoint 局部回滚) / SUPPORTS / NEVER
 - timeout：超时抛异常回滚；isolation：指定隔离级别；readOnly：只读标记
 
 @Transactional 失效的经典场景（面试高频）：
@@ -152,7 +156,8 @@ public void transfer(String from, String to, BigDecimal amount) {
 - RR 间隙锁范围大，能用 RC 就用 RC（RC 下除唯一键、外键检查外基本不用间隙锁）
 - 减少加锁行数：分批处理、按主键更新、避免大范围条件
 - 多表加锁顺序保持一致，降低死锁概率
-- 死锁排查：SHOW ENGINE INNODB STATUS\G 看 "LATEST DETECTED DEADLOCK"，MySQL 8.0 用 performance_schema.data_locks / data_lock_waits
+- 死锁排查：SHOW ENGINE INNODB STATUS\G 看 "LATEST DETECTED DEADLOCK"，MySQL 8.0 用 performance_schema.data_locks /
+  data_lock_waits
 
 ### 排查长事务
 
@@ -162,7 +167,17 @@ SELECT trx_id, trx_state, trx_started, trx_rows_locked, trx_query
 FROM information_schema.innodb_trx;
 
 -- 锁等待关系（MySQL 8.0）
-SELECT * FROM performance_schema.data_lock_waits;
+SELECT *
+FROM performance_schema.data_lock_waits;
 ```
+
+## 解决offset深度分页性能差的问题
+
+用上一页最后一条的排序键做书签，代替 offset：
+
+-- 第一页
+SELECT id, name, status FROM product WHERE status = 1 ORDER BY id LIMIT 20;
+-- 下一页：带上上一页最后一条的 id
+SELECT id, name, status FROM product WHERE status = 1 AND id > 12345 ORDER BY id LIMIT 20;
 
 

@@ -4,8 +4,6 @@
 
 bitmaps,节省存储空间
 
-通过乐观锁，来避免商品的超卖；监视库存，放在事务中执行。或者放在lua脚本中
-
 # 内存淘汰策略
 
 ## 触发前提
@@ -142,6 +140,8 @@ maxmemory-samples 10
 # 数据不能丢
 maxmemory-policy noeviction
 ```
+
+通过乐观锁，来避免商品的超卖；监视库存，放在事务中执行。或者放在lua脚本中
 
 ## 乐观锁防超卖：WATCH + MULTI/EXEC
 
