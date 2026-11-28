@@ -24,10 +24,10 @@ kafka-consumer-groups.sh --bootstrap-server localhost:9092 --describe --group <g
 
 输出列：`TOPIC  PARTITION  CURRENT-OFFSET  LOG-END-OFFSET  LAG  CONSUMER-ID  HOST  CLIENT-ID`
 
-| 现象 | 结论 | 处理方向 |
-| --- | --- | --- |
-| 所有分区 LAG 都大 | 消费端整体能力不足 | 扩机器 + 批量化 + 优化消费逻辑 |
-| 只有一个分区 LAG 大 | 见下方三种成因 | 针对性处理 |
+| 现象                | 结论               | 处理方向                       |
+|---------------------|--------------------|--------------------------------|
+| 所有分区 LAG 都大   | 消费端整体能力不足 | 扩机器 + 批量化 + 优化消费逻辑 |
+| 只有一个分区 LAG 大 | 见下方三种成因     | 针对性处理                     |
 
 单分区堆积的三种成因：
 
@@ -41,15 +41,16 @@ kafka-consumer-groups.sh --bootstrap-server localhost:9092 --describe --group <g
    一个 partition 同一时刻只被组内**一个** consumer 消费，所以加消费者实例最多加到分区数，再多就是空转。
 
 2. **单分区内必须按 offset 顺序消费**
-   「一个分区开 N 个线程无序处理」会破坏顺序。Kafka 2.4+ 的 KIP-429 支持同分区多线程，但要求按 offset 切成**连续区间**分配给各线程，且 offset 提交只能推进到「连续完成的水位线」，实现复杂度高。
+   「一个分区开 N 个线程无序处理」会破坏顺序。Kafka 2.4+ 的 KIP-429 支持同分区多线程，但要求按 offset 切成**连续区间**
+   分配给各线程，且 offset 提交只能推进到「连续完成的水位线」，实现复杂度高。
 
 3. **offset 提交时机决定语义**
 
-   | 写法 | 后果 |
-   | --- | --- |
-   | 先提交 offset，再处理 | 宕机丢消息 |
-   | 先处理，再提交 offset | 重复消费（at-least-once，幂等是业务责任） |
-   | `enable.auto.commit=true` | 消费过程中就提交，同样有丢消息风险 |
+   | 写法                      | 后果                                      |
+   |---------------------------|-------------------------------------------|
+   | 先提交 offset，再处理     | 宕机丢消息                                |
+   | 先处理，再提交 offset     | 重复消费（at-least-once，幂等是业务责任） |
+   | `enable.auto.commit=true` | 消费过程中就提交，同样有丢消息风险        |
 
 ### 应急止血（代价由低到高）
 
@@ -65,12 +66,17 @@ max.poll.interval.ms=300000  # 两次 poll 的最大间隔，防止被踢出组
 **② 跳过毒丸消息（死信队列）**
 
 ```java
-try {
-    handle(record);
-} catch (Exception e) {
-    log.error("处理失败，转入死信队列", e);
-    deadQueue.send(record.value());   // 关键：不能让它堵住整条分区
-}
+try{
+handle(record);
+}catch(
+Exception e){
+        log.
+
+error("处理失败，转入死信队列",e);
+    deadQueue.
+
+send(record.value());   // 关键：不能让它堵住整条分区
+        }
 // 无论成败，都在 handle 完成后提交 offset
 ```
 
@@ -114,13 +120,13 @@ kafka-consumer-groups.sh --bootstrap-server localhost:9092 --group <g> --topic <
 
 **消费端改造**
 
-| 维度 | 易堆积的写法 | 改造后 |
-| --- | --- | --- |
-| 拉取 | 单条处理 | 攒批处理（100ms 或 500 条触发一次） |
-| 写库 | 单条 insert | 批量 insert / MyBatis foreach / JDBC batch |
-| 写入语义 | insert | upsert（保证幂等，重复消费不炸） |
-| I/O | 同步阻塞 | 异步化 / 缓冲 |
-| 外部依赖 | 同步调用下游 | 降级为投递到本地队列或 MQ |
+| 维度     | 易堆积的写法 | 改造后                                     |
+|----------|--------------|--------------------------------------------|
+| 拉取     | 单条处理     | 攒批处理（100ms 或 500 条触发一次）        |
+| 写库     | 单条 insert  | 批量 insert / MyBatis foreach / JDBC batch |
+| 写入语义 | insert       | upsert（保证幂等，重复消费不炸）           |
+| I/O      | 同步阻塞     | 异步化 / 缓冲                              |
+| 外部依赖 | 同步调用下游 | 降级为投递到本地队列或 MQ                  |
 
 > 关键前提：**处理逻辑必须做成幂等的**，因为 at-least-once 一定会重复。
 
@@ -168,3 +174,16 @@ kafka-consumer-groups.sh --bootstrap-server localhost:9092 --describe --group <g
 # 5. 重置 offset（慎用）
 kafka-consumer-groups.sh --bootstrap-server localhost:9092 --group <g> --topic <t> --reset-offsets --to-latest --execute
 ```
+
+## controller选举
+
+broker启动的时候，谁第一个在zookeeper中创建controller,谁就当选管理者
+
+## broker启动的顺序
+
+1. 注册broker节点
+2. 监听/controller节点
+3. 注册/controller节点
+4. 选举成为/controller节点，监听/brokers/ids节点
+5. 通知集群的变化
+6. 连接broker,发送集群的数据
